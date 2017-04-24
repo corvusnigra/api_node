@@ -86,3 +86,66 @@ module.exports.productsReadOne = function (req, res) {
         })
     }
 };
+
+module.exports.productsUpdateOne = function (req, res) {
+
+    if(req.params && req.params.productid) {
+
+        Prod
+            .findById(req.params.productid)
+            .exec((err, product)=> {
+                if(!product){
+
+                    sendJSONresponse(res, 404, {
+                        "message": "productid not found"
+                    });
+
+                    return;
+                } else if(err){
+                    sendJSONresponse(res, 404, err);
+                    return;
+                }
+
+                product.name = req.body.name;
+                product.price = req.body.price;
+
+                product.save((err, product)=> {
+                   if(err){
+                       sendJSONresponse(res, 400, err);
+                   } else {
+                       sendJSONresponse(res, 200, product);
+                   }
+                });
+
+            })
+
+    } else {
+        sendJSONresponse(res, 404, {
+            "message": "No product in request"
+        })
+    }
+};
+
+
+module.exports.productsDeleteOne = function (req, res) {
+
+        var productid = req.params.productid;
+
+        if(productid){
+
+            Prod
+                .findByIdAndRemove(productid)
+                .exec((err, product)=> {
+                    if(err){
+                        sendJSONresponse(res, 404, err);
+                    } else {
+                        sendJSONresponse(res, 204, null)
+                    }
+                })
+
+        } else {
+            sendJSONresponse(res, 404, {
+                "message": "No productid"
+            })
+        }
+};
