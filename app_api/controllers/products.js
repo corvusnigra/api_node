@@ -35,3 +35,24 @@ module.exports.productsList = function (req, res) {
 
     })
 };
+
+
+module.exports.productsCreate = function (req, res) {
+
+    Prod
+        .create({
+            name: req.body.name,
+            price: req.body.price
+        }, (err, product) => {
+
+            if(err){
+                console.log(err);
+                sendJSONresponse(res, 400, err);
+            } else {
+                console.log(product);
+                sendJSONresponse(res, 201, product)
+            }
+
+        })
+
+};
