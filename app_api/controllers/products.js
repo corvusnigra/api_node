@@ -56,3 +56,33 @@ module.exports.productsCreate = function (req, res) {
         })
 
 };
+
+module.exports.productsReadOne = function (req, res) {
+
+    if(req.params && req.params.productid) {
+
+        Prod
+            .findById(req.params.productid)
+            .exec((err, product)=> {
+                if(!product){
+
+                    sendJSONresponse(res, 404, {
+                        "message": "productid not found"
+                    });
+
+                    return;
+                } else if(err){
+                    sendJSONresponse(res, 404, err);
+                    return;
+                }
+
+                sendJSONresponse(res, 200, product)
+
+            })
+
+    } else {
+        sendJSONresponse(res, 404, {
+            "message": "No product in request"
+        })
+    }
+};
